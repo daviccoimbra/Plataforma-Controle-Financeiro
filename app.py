@@ -3,6 +3,8 @@ import os
 import csv
 from datetime import datetime
 from collections import defaultdict
+from reportlab.lib.pagesizes import A4
+from reportlab.pdfgen import canvas
 
 # Define o caminho da pasta do projeto como a mesma onde está o arquivo .py
 PASTA_PROJETO = os.path.dirname(__file__)
@@ -113,7 +115,60 @@ def exportar_transacoes_csv(caminho_csv):
         escritor.writerows(transacoes)
         os.sync()  # Garante que o sistema operacional salve o arquivo fisicamente
 
-    print(f"Transações exportadas com sucesso para: {caminho_csv}")
+    print(f"\nTransações exportadas com sucesso para: {caminho_csv}")
+    
+# Exporta as transações para um arquivo PDF no local indicado
+def exportar_transacoes_pdf(caminho_pdf):
+    transacoes = carregar_transacoes()
+
+    if not transacoes:
+        print("Nenhuma transação para exportar.")
+        return
+
+    # Cria um novo PDF com tamanho A4
+    pdf = canvas.Canvas(caminho_pdf, pagesize=A4)
+
+    # Define posição inicial do texto no PDF (eixo Y)
+    largura, altura = A4
+    y = altura - 50
+
+    # Título
+    pdf.setFont("Helvetica-Bold", 16)
+    pdf.drawString(50, y, "Relatório de Transações Financeiras")
+    y -= 30
+
+    # Cabeçalhos da tabela
+    pdf.setFont("Helvetica-Bold", 12)
+    pdf.drawString(50, y, "Data")
+    pdf.drawString(120, y, "Tipo")
+    pdf.drawString(180, y, "Valor")
+    pdf.drawString(250, y, "Categoria")
+    pdf.drawString(400, y, "Descrição")
+    y -= 20
+
+    # Linhas de dados
+    pdf.setFont("Helvetica", 11)
+    for t in transacoes:
+        if y < 50:  # Se estiver muito no fim da página, cria nova página
+            pdf.showPage()
+            y = altura - 50
+            pdf.setFont("Helvetica", 11)
+
+        pdf.drawString(50, y, t['data'])
+        pdf.drawString(120, y, t['tipo'].title())
+        pdf.drawString(180, y, f"R$ {t['valor']:.2f}")
+        pdf.drawString(250, y, t['categoria'])
+        pdf.drawString(400, y, t['descricao'][:40])  # Limita descrição
+        y -= 20
+
+    # Data e hora de exportação no rodapé
+    pdf.setFont("Helvetica-Oblique", 9)
+    pdf.drawString(50, 30, f"Exportado em: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+
+    # Salva o PDF
+    pdf.save()
+
+    print(f"\nTransações exportadas com sucesso para: {caminho_pdf}")
 
 # Função principal com menu interativo no terminal
 def menu():
@@ -154,6 +209,10 @@ def menu():
         elif option == "7":
             exportar_transacoes_csv(f"{PASTA_PROJETO}/relatorio_transacoes.csv")
             continue
+        elif option == "8":
+            exportar_transacoes_pdf(os.path.join(PASTA_PROJETO, "relatorio_transacoes.pdf"))
+            continue
+
         elif option == "9":
             # Limpa todas as transações (reset no JSON)
             if os.path.exists(ARQUIVO_DADOS):

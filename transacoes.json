@@ -1,0 +1,16 @@
+[
+    {
+        "tipo": "receita",
+        "valor": 10000.0,
+        "categoria": "Teste",
+        "data": "2025-07-05",
+        "descricao": "Teste teste"
+    },
+    {
+        "tipo": "despesa",
+        "valor": 2000.0,
+        "categoria": "Teste teste",
+        "data": "2025-07-05",
+        "descricao": "Teste teste teste"
+    }
+]
