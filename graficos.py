@@ -38,3 +38,31 @@ def grafico_receitas_por_categoria():
     plt.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle
     plt.tight_layout()
     plt.show()
+    
+def grafico_receita_despesa_por_mes():
+    transacoes = carregar_transacoes()
+    resumo = defaultdict(lambda: {"receita": 0, "despesa": 0})
+    
+    for t in transacoes:
+        mes = datetime.strptime(t['data'], "%Y-%m-%d").strftime("%Y-%m")
+        resumo[mes][t['tipo']]+=t['valor']
+        
+    if not resumo:
+        print("Nenhuma transação encontrada.")
+        return
+    
+    meses = sorted(resumo.keys())
+    receitas = [resumo[m]['receita'] for m in meses]
+    despesas = [resumo[m]['despesa'] for m in meses]
+    
+    x = range(len(meses))
+    
+    plt.figure(figsize=(10, 6))
+    plt.bar(x, receitas, width=0.4, label="Receitas", align='center')
+    plt.bar(x, despesas, width=0.4, label="Despesas", align='edge')
+    plt.xticks(x, meses, rotation=45)
+    plt.ylabel("Valor (R$)")
+    plt.title("Receitas e Despesas por Mês")
+    plt.legend()
+    plt.tight_layout()
+    plt.show()
