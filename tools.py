@@ -146,3 +146,4 @@ def exportar_transacoes_pdf(caminho_pdf):
     pdf.save()
 
     print(f"\nTransações exportadas com sucesso para: {caminho_pdf}")
+
