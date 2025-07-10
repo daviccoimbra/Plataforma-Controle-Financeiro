@@ -24,38 +24,52 @@ def menu():
         option = input("Escolha uma opção: ")
 
         if option == "1":
+            limpar_tela()
             tipo = 'receita'
         elif option == "2":
+            limpar_tela()
             tipo = 'despesa'
         elif option == "3":
+            limpar_tela()
             saldo()
             continue
         elif option == "4":
-            print('\n')
+            limpar_tela()
             listar_transacoes()
             continue
         elif option == "5":
+            limpar_tela()
             resumo_por_categoria()
             continue
         elif option == "6":
+            limpar_tela()
             resumo_por_mes()
             continue
         elif option == "7":
+            limpar_tela()
             exportar_transacoes_csv(f"{PASTA_PROJETO}/relatorio_transacoes.csv")
             continue
         elif option == "8":
+            limpar_tela()
             exportar_transacoes_pdf(os.path.join(PASTA_PROJETO, "relatorio_transacoes.pdf"))
             continue
         elif option == "9":
-            grafico_option = input("\nEscolha o gráfico:\n1. Despesas por Categoria\n2. Receitas por Categoria\n 3. Voltar\nOpção: ")
+            grafico_option = input("\nEscolha o gráfico:\n1. Despesas por Categoria\n2. Receitas por Categoria\n3. Receitas x Despesas por Mês\n4. Voltar\nOpção: ")
             if grafico_option == "1":
+                limpar_tela()
                 grafico_despesas_por_categoria()
                 continue
             elif grafico_option == "2":
+                limpar_tela()
                 grafico_receitas_por_categoria()
                 continue
-            elif grafico_option =="3":continue
+            elif grafico_option == '3':
+                limpar_tela()
+                grafico_receita_despesa_por_mes()
+                continue
+            elif grafico_option =="4":continue
         elif option == "10":
+            limpar_tela()
             # Limpa todas as transações (reset no JSON)
             if os.path.exists(ARQUIVO_DADOS):
                 with open(ARQUIVO_DADOS, 'w') as arquivo:
@@ -63,6 +77,7 @@ def menu():
                 print('\nTransações limpadas')
             continue
         elif option == "11":
+            limpar_tela()
             print("\nSaindo do programa.")
             break
         else:
